@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script>
+      window.parentOrigin = "*"; // Change to "https://www.prairietest.org" or similar
+
+      $(() => {
+          window.addEventListener("message", (event) => {
+              //if (event.origin !== window.parentOrigin) return; // Uncomment this line for production
+              if (!event.data) return;
+
+              if (event.data.tag == 'init') {
+                  window.secret = event.data.secret;
+                  window.parent.postMessage({tag: 'initialized', secret: window.secret}, window.parentOrigin);
+                  $('#status').text('Successfully initialized.');
+              }
+          }, false);
+      });
+    </script>
+  </head>
+  <body>
+    <p>
+      This is <tt>checkin.html</tt>
+    </p>
+    <p>
+      Status: <span id="status">Initializing...</span>
+    </p>
+    <p>
+      UID:
+      <input id="uid">
+      <button onclick="window.parent.postMessage({tag: 'check-in', secret: window.secret, uid: $('#uid').val()}, window.parentOrigin);">
+        Check-in by UID
+      </button>
+    </p>
+    <p>
+      UIN:
+      <input id="uin">
+      <button onclick="window.parent.postMessage({tag: 'check-in', secret: window.secret, uin: $('#uin').val()}, window.parentOrigin);">
+        Check-in by UIN
+      </button>
+    </p>
+  </body>
+</html>
