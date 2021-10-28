@@ -25,6 +25,8 @@
               if (event.data.tag == 'show-photo') {
                   if (event.data.uid == 'matt@example.com') {
                       document.getElementById('photo').src = 'images/matt.jpg';
+                  } else if (event.data.uid == 'mariana@example.com') {
+                      document.getElementById('photo').src = 'images/mariana.jpg';
                   } else {
                       document.getElementById('photo').src = '';
                       document.getElementById('status').textContent = 'ERROR: unknown user, UID: "' + event.data.uid + '", UIN: "' + event.data.uin + '"';
