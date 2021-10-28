@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1">
+    <title>test-show-photo</title>
+    <script>
+      var ready = function(callback) {
+          if (document.readyState != "loading") callback();
+          else document.addEventListener("DOMContentLoaded", callback);
+      };
+
+      ready(function() {
+          var secret = '68dca265-45be-4cce-a31f-aa8a6eafedb5';
+          var initialized = false;
+
+          function setStatus(status) {
+              document.getElementById('status').textContent = status;
+          }
+          setStatus('Initializing show-photo page');
+
+          function sendInit() {
+              if (initialized) return;
+              var initMsg = {tag: 'init', secret: secret};
+              console.log('Sending initMsg:', initMsg);
+              document.getElementById('show-photo-frame').contentWindow.postMessage(initMsg, '*');
+              setTimeout(sendInit, 100);
+          }
+          
+          window.addEventListener("message", (event) => {
+              console.log('Received message', event);
+              if (!event.data) {
+                  setStatus('ERROR: Missing event.data in message');
+                  return;
+              }
+              if (event.data.secret !== secret) {
+                  setStatus('ERROR: event.data.secret is "' + event.data.secret + '" but should be "' + secret + '"');
+                  return;
+              }
+
+              if (event.data.tag == 'initialized') {
+                  initialized = true;
+                  setStatus('Initialized');
+              }
+          }, false);
+
+          sendInit();
+      });
+    </script>
+  </head>
+  <body>
+    <p>
+      This is <tt>test-show-photo.html</tt>
+    </p>
+    <p>
+      Status: <span id="status">Loading</span>
+    </p>
+    <p>
+      <button onclick="document.getElementById('show-photo-frame').contentWindow.postMessage({tag: 'show-photo', uid: 'matt@example.com', uin: '978429723'}, '*');">
+        Show photo for <tt>matt@example.com</tt>
+      </button>
+    </p>
+    <p>
+      <button onclick="document.getElementById('show-photo-frame').contentWindow.postMessage({tag: 'show-photo', uid: 'mariana@example.com', uin: '482912349'}, '*');">
+        Show photo for <tt>mariana@example.com</tt>
+      </button>
+    </p>
+
+    <hr>
+
+    <iframe id="show-photo-frame" src="./show-photo.html" style="width: 600px; height: 400px; overflow-y: clip;"></iframe>
+      
+    </div>
+  </body>
+</html>

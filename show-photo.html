@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1">
+    <script>
+      window.parentOrigin = "*"; // Change to "https://www.prairietest.org" or similar
+
+      var ready = function(callback) {
+          if (document.readyState != "loading") callback();
+          else document.addEventListener("DOMContentLoaded", callback);
+      };
+
+      ready(() => {
+          window.addEventListener("message", (event) => {
+              //if (event.origin !== window.parentOrigin) return; // Uncomment this line for production
+              if (!event.data) return;
+
+              if (event.data.tag == 'init') {
+                  window.secret = event.data.secret;
+                  window.parent.postMessage({tag: 'initialized', secret: window.secret}, window.parentOrigin);
+                  document.getElementById('status').textContent = 'Successfully initialized.';
+              }
+
+              if (event.data.tag == 'show-photo') {
+                  if (event.data.uid == 'matt@example.com') {
+                      document.getElementById('photo').src = 'images/matt.jpg';
+                  } else if (event.data.uid == 'mariana@example.com') {
+                      document.getElementById('photo').src = 'images/mariana.jpg';
+                  } else {
+                      document.getElementById('photo').src = '';
+                      document.getElementById('status').textContent = 'ERROR: unknown user, UID: "' + event.data.uid + '", UIN: "' + event.data.uin + '"';
+                  }
+              }
+          }, false);
+      });
+    </script>
+  </head>
+  <body>
+    <p>
+      This is <tt>show-photo.html</tt>
+    </p>
+    <p>
+      Status: <span id="status">Initializing...</span>
+    </p>
+    <img id="photo" style="max-height: 100vh; max-width: 100vw; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"/>
+  </body>
+</html>

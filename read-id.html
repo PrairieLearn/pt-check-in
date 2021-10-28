@@ -2,13 +2,15 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script>
       window.parentOrigin = "*"; // Change to "https://www.prairietest.org" or similar
 
-      $(() => {
+      var ready = function(callback) {
+          if (document.readyState != "loading") callback();
+          else document.addEventListener("DOMContentLoaded", callback);
+      };
+
+      ready(() => {
           window.addEventListener("message", (event) => {
               //if (event.origin !== window.parentOrigin) return; // Uncomment this line for production
               if (!event.data) return;
@@ -16,7 +18,7 @@
               if (event.data.tag == 'init') {
                   window.secret = event.data.secret;
                   window.parent.postMessage({tag: 'initialized', secret: window.secret}, window.parentOrigin);
-                  $('#status').text('Successfully initialized.');
+                  document.getElementById('status').textContent = 'Successfully initialized.';
               }
           }, false);
       });
@@ -24,7 +26,7 @@
   </head>
   <body>
     <p>
-      This is <tt>checkin.html</tt>
+      This is <tt>read-id.html</tt>
     </p>
     <p>
       Status: <span id="status">Initializing...</span>
@@ -32,15 +34,15 @@
     <p>
       UID:
       <input id="uid">
-      <button onclick="window.parent.postMessage({tag: 'check-in', secret: window.secret, uid: $('#uid').val()}, window.parentOrigin);">
-        Check-in by UID
+      <button onclick="window.parent.postMessage({tag: 'read-id', secret: window.secret, uid: document.getElementById('uid').value}, window.parentOrigin);">
+        Send UID
       </button>
     </p>
     <p>
       UIN:
       <input id="uin">
-      <button onclick="window.parent.postMessage({tag: 'check-in', secret: window.secret, uin: $('#uin').val()}, window.parentOrigin);">
-        Check-in by UIN
+      <button onclick="window.parent.postMessage({tag: 'read-id', secret: window.secret, uin: document.getElementById('uin').value}, window.parentOrigin);">
+        Send UIN
       </button>
     </p>
   </body>
