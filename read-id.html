@@ -32,14 +32,14 @@
       Status: <span id="status">Initializing...</span>
     </p>
     <p>
-      UID:
+      <label for="uid">UID:</label>
       <input id="uid">
       <button onclick="window.parent.postMessage({tag: 'read-id', secret: window.secret, uid: document.getElementById('uid').value}, window.parentOrigin);">
         Send UID
       </button>
     </p>
     <p>
-      UIN:
+      <label for="uin">UIN:</label>
       <input id="uin">
       <button onclick="window.parent.postMessage({tag: 'read-id', secret: window.secret, uin: document.getElementById('uin').value}, window.parentOrigin);">
         Send UIN
